@@ -13,6 +13,15 @@ A public service improvement proposal for industry-based account category recomm
 
 > 미리보기 화면에서는 업종 선택, 거래내용 입력, 거래금액 입력, 결제수단 선택 후 추천 계정과목 후보와 추천 사유를 확인할 수 있습니다.
 
+현재 미리보기 화면은 다음 샘플 데이터를 기준으로 동작합니다.
+
+| 구분 | 내용 |
+|---|---:|
+| 데모 업종 | 10개 |
+| 계정과목 코드 | 18개 |
+| 업종-계정과목 매핑 샘플 | 100개 |
+| 미리보기 방식 | 정적 HTML |
+
 ---
 
 ## 1. 프로젝트 개요
@@ -68,9 +77,14 @@ A public service improvement proposal for industry-based account category recomm
 |---|---|---|---|
 | 전자상거래 소매업 | 네이버 스마트스토어 광고비 | 광고선전비 | 온라인 판매 촉진 목적의 광고 지출 |
 | 전자상거래 소매업 | 택배 발송비 | 운반비 | 상품 배송과 직접 관련된 비용 |
-| 음식점업 | 식재료 구매 | 원재료비 | 음식 제조를 위한 주요 재료 구매 |
-| 소프트웨어 개발업 | 클라우드 서버 이용료 | 지급수수료 / 통신비 | 서비스 운영을 위한 외부 플랫폼·인프라 비용 |
-| 교육서비스업 | 강의장 대관료 | 지급임차료 | 교육 제공을 위한 공간 사용 비용 |
+| 음식점업 | 식재료 구매 | 재료비매입 | 음식 제조를 위한 주요 재료 구매 |
+| 소프트웨어 개발업 | 클라우드 서버 이용료 | 지급수수료 | 서비스 운영을 위한 외부 플랫폼·인프라 비용 |
+| 교육서비스업 | 강의장 대관료 | 임차료 | 교육 제공을 위한 공간 사용 비용 |
+| 디자인 서비스업 | 폰트·이미지 라이선스 | 지급수수료 | 디자인 리소스 사용료 |
+| 미용 서비스업 | 염색약·시술재료 구매 | 재료비매입 | 서비스 제공에 직접 사용하는 재료 |
+| 카페/음료점업 | 원두·우유·시럽 구매 | 재료비매입 | 음료 제조 원재료 |
+| 콘텐츠 제작업 | 촬영 장비 구매 | 사업용 자산 매입 | 콘텐츠 제작 장비 취득 |
+| 인테리어 시공업 | 타일·목재·페인트 구매 | 재료비매입 | 시공에 직접 사용되는 자재 |
 
 ---
 
@@ -92,18 +106,12 @@ A public service improvement proposal for industry-based account category recomm
 hometax-industry-account-mapping/
 ├─ README.md
 ├─ preview.html
-├─ preview/
-│  └─ preview.html
 ├─ data/
 │  ├─ industry-code-sample.csv
 │  ├─ account-code-sample.csv
 │  └─ industry-account-mapping-sample.csv
 ├─ docs/
-│  ├─ recommendation-rule.md
-│  ├─ erd.md
-│  ├─ api-spec.md
-│  ├─ batch-design.md
-│  └─ ux-flow.md
+│  └─ recommendation-rule.md
 ├─ examples/
 │  ├─ input-example.json
 │  └─ output-example.json
@@ -117,6 +125,16 @@ hometax-industry-account-mapping/
 
 현재 레포가 문서 중심이라면 `src/example-architecture`는 실제 구현 전 **권장 구조 예시**로 둘 수 있습니다.
 
+향후 확장 시 아래 문서를 추가할 수 있습니다.
+
+```text
+docs/
+├─ erd.md
+├─ api-spec.md
+├─ batch-design.md
+└─ ux-flow.md
+```
+
 ---
 
 ## 6. 주요 파일 설명
@@ -126,12 +144,8 @@ hometax-industry-account-mapping/
 | `preview.html` | 브라우저에서 바로 열 수 있는 추천 기능 미리보기 화면 |
 | `data/industry-code-sample.csv` | 데모용 업종코드, 업태, 종목 샘플 |
 | `data/account-code-sample.csv` | 데모용 계정과목 코드와 설명 |
-| `data/industry-account-mapping-sample.csv` | 업종별 거래유형과 추천 계정과목 매핑 데이터 |
+| `data/industry-account-mapping-sample.csv` | 업종별 거래유형과 추천 계정과목 매핑 데이터 100개 |
 | `docs/recommendation-rule.md` | 추천 점수 산정 방식, 예외처리, 사용자 안내 문구 |
-| `docs/erd.md` | 업종코드, 계정과목, 추천 규칙, 이력 테이블 관계 설명 |
-| `docs/api-spec.md` | 계정과목 추천 API 요청/응답 명세 |
-| `docs/batch-design.md` | 업종코드 및 계정과목 기준 데이터 적재 방식 |
-| `docs/ux-flow.md` | 홈택스 장부 입력 화면 기준 사용자 흐름 |
 | `examples/input-example.json` | 계정과목 추천 API 요청 예시 |
 | `examples/output-example.json` | 계정과목 추천 API 응답 예시 |
 
@@ -145,11 +159,27 @@ hometax-industry-account-mapping/
 
 | 컬럼 | 설명 |
 |---|---|
+| `industry_key` | 내부 매핑용 업종 키 |
 | `industry_code` | 데모용 업종코드 |
 | `business_type` | 업태 |
 | `business_item` | 종목 |
 | `industry_name` | 업종명 |
-| `description` | 업종 설명 |
+| `sample_only` | 샘플 데이터 여부 |
+
+현재 샘플에는 다음 10개 업종이 포함되어 있습니다.
+
+| industry_key | 업종명 |
+|---|---|
+| `ECOM` | 전자상거래 소매업 |
+| `FOOD` | 한식 일반 음식점업 |
+| `SW` | 소프트웨어 개발업 |
+| `EDU` | 교육서비스업 |
+| `DESIGN` | 디자인 서비스업 |
+| `BEAUTY` | 미용 서비스업 |
+| `CAFE` | 카페/음료점업 |
+| `FITNESS` | 피트니스 서비스업 |
+| `CONTENT` | 콘텐츠 제작업 |
+| `INTERIOR` | 인테리어 시공업 |
 
 ### 7.2 계정과목 샘플
 
@@ -159,9 +189,31 @@ hometax-industry-account-mapping/
 |---|---|
 | `account_code` | 데모용 계정과목 코드 |
 | `account_name` | 계정과목명 |
-| `account_group` | 비용, 매출, 자산 등 분류 |
+| `account_group` | 수입금액, 매출원가, 판매관리비, 자산 등 분류 |
 | `description` | 계정과목 설명 |
-| `example_keywords` | 추천에 사용할 수 있는 예시 키워드 |
+
+현재 샘플에는 다음 18개 계정과목 코드가 포함되어 있습니다.
+
+| account_code | 계정과목명 | 분류 |
+|---|---|---|
+| `REV_SALES` | 매출액 | 수입금액 |
+| `EXP_AD` | 광고선전비 | 판매관리비 |
+| `EXP_FEE` | 지급수수료 | 판매관리비 |
+| `EXP_DELIVERY` | 운반비 | 판매관리비 |
+| `COGS_GOODS` | 상품매입 | 매출원가 |
+| `COGS_MATERIAL` | 재료비매입 | 매출원가 |
+| `EXP_RENT` | 임차료 | 판매관리비 |
+| `EXP_SALARY` | 급료 | 판매관리비 |
+| `EXP_SUPPLIES` | 소모품비 | 판매관리비 |
+| `EXP_COMM` | 통신비 | 판매관리비 |
+| `EXP_WATER_ELEC` | 수도광열비 | 판매관리비 |
+| `EXP_TRAVEL` | 여비교통비 | 판매관리비 |
+| `EXP_OUTSOURCING` | 외주용역비 | 판매관리비 |
+| `ASSET_BUY` | 사업용 자산 매입 | 자산 |
+| `EXP_TAX` | 제세공과금 | 판매관리비 |
+| `EXP_VEHICLE` | 차량유지비 | 판매관리비 |
+| `EXP_WELFARE` | 복리후생비 | 판매관리비 |
+| `EXP_INSURANCE` | 보험료 | 판매관리비 |
 
 ### 7.3 업종-계정과목 매핑 샘플
 
@@ -169,13 +221,19 @@ hometax-industry-account-mapping/
 
 | 컬럼 | 설명 |
 |---|---|
+| `mapping_id` | 매핑 규칙 식별자 |
+| `industry_key` | 내부 업종 키 |
 | `industry_code` | 데모용 업종코드 |
 | `industry_name` | 업종명 |
+| `transaction_keywords` | 추천에 사용하는 거래 키워드 |
 | `transaction_type` | 거래유형 |
-| `recommended_account` | 추천 계정과목 |
-| `priority` | 추천 우선순위 |
+| `recommended_account_code` | 추천 계정과목 코드 |
+| `recommended_account_name` | 추천 계정과목명 |
+| `score` | 기본 추천 점수 |
 | `reason` | 추천 사유 |
 | `caution` | 주의사항 |
+
+현재 샘플은 **10개 업종 × 업종별 10개 거래유형 = 총 100개 매핑 데이터**로 구성되어 있습니다.
 
 ---
 
@@ -371,9 +429,10 @@ POST /api/recommend/accounts
 
 ```json
 {
-  "industryCode": "ECOM-001",
-  "businessType": "도매 및 소매업",
-  "businessItem": "전자상거래 소매업",
+  "industryCode": "DEMO-ECOM-001",
+  "industryKey": "ECOM",
+  "businessType": "소매업",
+  "businessItem": "전자상거래",
   "transactionDescription": "네이버 스마트스토어 광고비",
   "amount": 77000,
   "paymentMethod": "business_card"
@@ -388,7 +447,7 @@ POST /api/recommend/accounts
   "message": "추천 계정과목 후보가 조회되었습니다.",
   "recommendations": [
     {
-      "accountCode": "ACCT-ADV",
+      "accountCode": "EXP_AD",
       "accountName": "광고선전비",
       "confidence": 0.92,
       "priority": 1,
@@ -396,7 +455,7 @@ POST /api/recommend/accounts
       "caution": "실제 계정과목은 거래 실질과 증빙에 따라 달라질 수 있습니다."
     },
     {
-      "accountCode": "ACCT-FEE",
+      "accountCode": "EXP_FEE",
       "accountName": "지급수수료",
       "confidence": 0.63,
       "priority": 2,
@@ -481,7 +540,7 @@ CSV / Excel / OpenAPI 수집
 | 구분 | 현재 포함 | 향후 확장 |
 |---|---|---|
 | README | 포함 | 계속 보완 |
-| CSV 샘플 | 포함 | 실제 기준정보 기반 확장 |
+| CSV 샘플 | 포함, 100개 매핑 샘플 | 실제 기준정보 기반 확장 |
 | 추천 규칙 문서 | 포함 | 점수 계산 로직 고도화 |
 | API 예시 | 포함 | Swagger/OpenAPI 문서화 |
 | Preview HTML | 포함 | 실제 프론트엔드 프로토타입 확장 |
@@ -542,5 +601,15 @@ CSV / Excel / OpenAPI 수집
 ## 22. Commit Message Example
 
 ```bash
-git commit -m "docs: refine README with ERD and architecture overview"
+git commit -m "docs: expand mapping samples and update preview footer"
 ```
+
+---
+
+## Copyright
+
+<a href="https://github.com/code88morning-cmd">
+  <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="20" alt="GitHub logo" />
+</a>
+
+© 2026 [code88morning-cmd](https://github.com/code88morning-cmd). All rights reserved.

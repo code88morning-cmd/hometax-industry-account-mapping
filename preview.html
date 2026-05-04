@@ -1,741 +1,210 @@
 <!doctype html>
-<html lang="ko">
+<html lang='ko'>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
   <title>홈택스 업종 기반 계정과목 추천 미리보기</title>
   <style>
-    :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --primary: #2563eb;
-      --primary-soft: #eff6ff;
-      --green: #16a34a;
-      --orange: #ea580c;
-      --red: #dc2626;
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.13), transparent 32rem),
-        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.11), transparent 34rem),
-        var(--bg);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+      color: #172033;
+      background: radial-gradient(circle at top left, rgba(31, 94, 255, .10), transparent 32rem), #f5f7fb;
     }
-
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 42px 0 64px;
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 28px; }
+    header {
+      background: linear-gradient(135deg, #1f5eff, #6aa7ff);
+      color: white;
+      border-radius: 24px;
+      padding: 34px;
+      box-shadow: 0 16px 40px rgba(31, 94, 255, .22);
     }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 24px;
-      align-items: stretch;
-      margin-bottom: 24px;
-    }
-
-    .hero-card,
-    .panel,
-    .result-card {
-      background: rgba(255,255,255,0.88);
-      border: 1px solid rgba(229, 231, 235, 0.9);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-    }
-
-    .hero-card {
-      padding: 32px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--primary-soft);
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.14;
-      letter-spacing: -0.04em;
-    }
-
-    .lead {
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.65;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .metric {
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: #fff;
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 22px;
-      letter-spacing: -0.03em;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .flow {
-      padding: 26px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .flow-step {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 14px;
-      border-radius: 16px;
-      background: #fff;
-      border: 1px solid var(--line);
-    }
-
-    .step-no {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      background: var(--primary);
-      color: #fff;
-      display: inline-grid;
-      place-items: center;
-      font-weight: 800;
-      flex: 0 0 auto;
-    }
-
-    .flow-step b {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .flow-step p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .main {
-      display: grid;
-      grid-template-columns: 0.78fr 1.22fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 24px;
-    }
-
-    .panel h2,
-    .result-card h2 {
-      margin: 0 0 18px;
-      font-size: 22px;
-      letter-spacing: -0.03em;
-    }
-
-    label {
-      display: block;
-      margin: 18px 0 8px;
-      font-weight: 800;
-      font-size: 14px;
-    }
-
-    select,
-    input,
-    textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #fff;
-      padding: 13px 14px;
-      font: inherit;
-      outline: none;
-    }
-
-    textarea {
-      min-height: 92px;
-      resize: vertical;
-    }
-
-    select:focus,
-    input:focus,
-    textarea:focus {
-      border-color: rgba(37, 99, 235, 0.75);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 13px 16px;
-      font-weight: 800;
-      cursor: pointer;
-      font: inherit;
-    }
-
-    .primary {
-      background: var(--primary);
-      color: #fff;
-      flex: 1;
-    }
-
-    .secondary {
-      background: #eef2ff;
-      color: #3730a3;
-    }
-
-    .result-card {
-      padding: 24px;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .summary-item {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .summary-item span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .summary-item b {
-      font-size: 15px;
-      letter-spacing: -0.02em;
-    }
-
-    .recommendation {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      background: #fff;
-      margin-top: 12px;
-    }
-
-    .rec-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .rec-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-    }
-
-    .rank {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: inline-grid;
-      place-items: center;
-      background: #f3f4f6;
-      font-size: 14px;
-    }
-
-    .confidence {
-      min-width: 108px;
-      text-align: right;
-      font-weight: 900;
-    }
-
-    .bar {
-      height: 8px;
-      background: #f3f4f6;
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 10px 0 12px;
-    }
-
-    .bar > i {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: var(--primary);
-      width: 0%;
-    }
-
-    .reason,
-    .caution {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .caution {
-      color: #92400e;
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-
-    .empty {
-      border: 1px dashed #cbd5e1;
-      border-radius: 18px;
-      padding: 36px;
-      text-align: center;
-      color: var(--muted);
-      background: rgba(255,255,255,0.72);
-    }
-
-    .disclaimer {
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 14px;
-      background: #f9fafb;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .data-preview {
-      margin-top: 24px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: #fff;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 760px;
-    }
-
-    th,
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      font-size: 14px;
-      vertical-align: top;
-    }
-
-    th {
-      background: #f8fafc;
-      font-weight: 900;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    @media (max-width: 900px) {
-      .hero,
-      .main {
-        grid-template-columns: 1fr;
-      }
-
-      .metric-grid,
-      .summary {
-        grid-template-columns: 1fr;
-      }
-    }
+    .badge { display: inline-block; padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,.18); font-weight: 800; font-size: 13px; margin-bottom: 14px; }
+    h1 { margin: 0; font-size: 36px; line-height: 1.2; letter-spacing: -0.04em; }
+    .lead { margin: 14px 0 0; max-width: 800px; line-height: 1.65; opacity: .92; }
+    .meta-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 22px; }
+    .meta { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.18); border-radius: 18px; padding: 16px; }
+    .meta strong { display: block; font-size: 23px; }
+    .meta span { display: block; margin-top: 5px; font-size: 13px; opacity: .95; }
+    .grid { display: grid; grid-template-columns: 380px 1fr; gap: 22px; margin-top: 22px; }
+    .card { background: white; border: 1px solid #e5eaf3; border-radius: 22px; padding: 24px; box-shadow: 0 14px 36px rgba(15, 23, 42, .06); }
+    h2 { margin: 0 0 18px; font-size: 22px; letter-spacing: -0.03em; }
+    label { display: block; margin: 16px 0 8px; font-weight: 800; font-size: 14px; }
+    select, input, textarea { width: 100%; border: 1px solid #dce3ef; border-radius: 14px; padding: 13px 14px; font: inherit; outline: none; background: #fff; }
+    textarea { min-height: 92px; resize: vertical; }
+    button { width: 100%; margin-top: 18px; border: none; border-radius: 15px; padding: 14px 16px; background: #1f5eff; color: white; font-weight: 900; font-size: 15px; cursor: pointer; }
+    .helper { margin-top: 12px; padding: 12px; border-radius: 14px; background: #f8fafc; color: #64748b; border: 1px solid #e5eaf3; font-size: 13px; line-height: 1.5; }
+    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .summary div { border: 1px solid #e5eaf3; border-radius: 16px; padding: 14px; background: #f9fbff; }
+    .summary span { display: block; color: #68758a; font-size: 12px; margin-bottom: 5px; font-weight: 700; }
+    .summary b { font-size: 15px; }
+    .rec { border: 1px solid #e5eaf3; border-radius: 18px; padding: 18px; margin-top: 12px; background: white; }
+    .rec-head { display: flex; justify-content: space-between; gap: 14px; align-items: center; margin-bottom: 10px; }
+    .title { font-size: 20px; font-weight: 900; letter-spacing: -0.03em; }
+    .score { color: #0f8a46; font-weight: 900; }
+    .bar { height: 8px; border-radius: 999px; background: #ecf1f8; overflow: hidden; margin: 10px 0 12px; }
+    .bar i { display: block; height: 100%; background: #1f5eff; border-radius: 999px; }
+    .reason { color: #4e5c70; line-height: 1.55; margin: 0; font-size: 14px; }
+    .caution { margin: 10px 0 0; padding: 11px 12px; border-radius: 13px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; font-size: 14px; line-height: 1.5; }
+    .toolbar { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .toolbar small { color: #64748b; }
+    .table-card { margin-top: 22px; }
+    .table-wrap { overflow: auto; border: 1px solid #e5eaf3; border-radius: 16px; max-height: 620px; }
+    table { width: 100%; min-width: 1000px; border-collapse: collapse; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #e5eaf3; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f8fafc; font-weight: 900; position: sticky; top: 0; z-index: 1; }
+    footer { margin-top: 28px; padding: 18px 20px; text-align: center; color: #64748b; font-size: 14px; display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap; }
+    footer a { color: #1f5eff; font-weight: 800; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+    .gh-icon { width: 20px; height: 20px; display: inline-block; vertical-align: middle; }
+    @media (max-width: 980px) { .grid, .summary, .meta-grid { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="badge">Hometax Industry Account Mapping · Preview</div>
-        <h1>사업자등록 업종 정보 기반<br />계정과목 추천 미리보기</h1>
-        <p class="lead">
-          업종코드, 업태, 종목 정보와 거래내용을 연결해 홈택스 장부 작성 단계에서
-          계정과목 후보를 추천하는 화면 예시입니다. 실제 세무 판단이 아니라 개발 설계용 샘플입니다.
-        </p>
-
-        <div class="metric-grid">
-          <div class="metric">
-            <strong>5개</strong>
-            <span>데모 업종</span>
-          </div>
-          <div class="metric">
-            <strong>9개</strong>
-            <span>계정과목 후보</span>
-          </div>
-          <div class="metric">
-            <strong>12개</strong>
-            <span>매핑 규칙</span>
-          </div>
-        </div>
+  <main class='wrap'>
+    <header>
+      <div class='badge'>Public Service Improvement Proposal</div>
+      <h1>사업자등록 업종 정보 기반<br>홈택스 계정과목 추천 미리보기</h1>
+      <p class='lead'>사업자등록의 업종코드·업태·종목 정보를 장부 입력 단계와 연결하여 거래내용에 맞는 계정과목 후보를 추천하는 화면 예시입니다. 현재 버전에는 10개 업종, 100개 매핑 샘플이 포함되어 있습니다.</p>
+      <div class='meta-grid'>
+        <div class='meta'><strong>10개</strong><span>데모 업종</span></div>
+        <div class='meta'><strong>18개</strong><span>계정과목 코드</span></div>
+        <div class='meta'><strong>100개</strong><span>매핑 규칙</span></div>
+        <div class='meta'><strong>정적 HTML</strong><span>브라우저 미리보기</span></div>
       </div>
+    </header>
 
-      <div class="flow hero-card">
-        <div class="flow-step">
-          <span class="step-no">1</span>
-          <div>
-            <b>사업자등록 업종 확인</b>
-            <p>업종코드, 업태, 종목, 업종명을 기준 정보로 사용합니다.</p>
-          </div>
-        </div>
-        <div class="flow-step">
-          <span class="step-no">2</span>
-          <div>
-            <b>거래내용 입력</b>
-            <p>사용자가 입력한 거래 설명, 금액, 결제수단에서 키워드를 찾습니다.</p>
-          </div>
-        </div>
-        <div class="flow-step">
-          <span class="step-no">3</span>
-          <div>
-            <b>추천 계정과목 표시</b>
-            <p>추천 사유, 확신도, 주의사항을 함께 보여주어 오분류를 줄입니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="main">
-      <aside class="panel">
-        <h2>입력 샘플</h2>
-
-        <label for="industry">사업자등록 업종</label>
-        <select id="industry">
-          <option value="ECOM-001">전자상거래 소매업</option>
-          <option value="FOOD-001">한식 일반 음식점업</option>
-          <option value="EDU-001">기타 교육지원 서비스업</option>
-          <option value="SW-001">응용 소프트웨어 개발 및 공급업</option>
-          <option value="DESIGN-001">시각 디자인업</option>
+    <section class='grid'>
+      <aside class='card'>
+        <h2>입력 예시</h2>
+        <label for='industry'>업종</label>
+        <select id='industry'>
+          <option value='ECOM'>전자상거래 소매업</option>
+          <option value='FOOD'>한식 일반 음식점업</option>
+          <option value='SW'>소프트웨어 개발업</option>
+          <option value='EDU'>교육서비스업</option>
+          <option value='DESIGN'>디자인 서비스업</option>
+          <option value='BEAUTY'>미용 서비스업</option>
+          <option value='CAFE'>카페/음료점업</option>
+          <option value='FITNESS'>피트니스 서비스업</option>
+          <option value='CONTENT'>콘텐츠 제작업</option>
+          <option value='INTERIOR'>인테리어 시공업</option>
         </select>
 
-        <label for="amount">거래금액</label>
-        <input id="amount" value="120000" inputmode="numeric" />
+        <label for='amount'>거래금액</label>
+        <input id='amount' value='120000'>
 
-        <label for="description">거래내용</label>
-        <textarea id="description">네이버 스마트스토어 키워드 광고비</textarea>
+        <label for='description'>거래내용</label>
+        <textarea id='description'>네이버 스마트스토어 키워드 광고비</textarea>
 
-        <label for="payment">결제수단</label>
-        <select id="payment">
+        <label for='payment'>증빙/결제수단</label>
+        <select id='payment'>
           <option>사업용 신용카드</option>
-          <option>사업용 계좌이체</option>
-          <option>현금영수증</option>
           <option>전자세금계산서</option>
+          <option>현금영수증</option>
+          <option>사업용 계좌이체</option>
         </select>
 
-        <div class="btn-row">
-          <button class="primary" onclick="recommend()">추천 실행</button>
-          <button class="secondary" onclick="loadDemo()">데모값</button>
-        </div>
-
-        <div class="disclaimer">
-          이 화면은 GitHub 레포 미리보기용 정적 HTML입니다. 서버, DB, 실제 홈택스 API와 연결되어 있지 않습니다.
-        </div>
+        <button onclick='recommend()'>추천 실행</button>
+        <div class='helper'>추천 결과는 데모용 참고 후보입니다. 실제 장부 작성과 세무 신고는 거래의 실질과 증빙에 따라 최종 판단해야 합니다.</div>
       </aside>
 
-      <section class="result-card">
+      <section class='card'>
         <h2>추천 결과</h2>
-        <div class="summary">
-          <div class="summary-item">
-            <span>업종</span>
-            <b id="summaryIndustry">전자상거래 소매업</b>
-          </div>
-          <div class="summary-item">
-            <span>거래내용</span>
-            <b id="summaryDesc">네이버 스마트스토어 키워드 광고비</b>
-          </div>
-          <div class="summary-item">
-            <span>결제수단</span>
-            <b id="summaryPayment">사업용 신용카드</b>
-          </div>
+        <div class='summary'>
+          <div><span>업종</span><b id='sumIndustry'>전자상거래 소매업</b></div>
+          <div><span>거래내용</span><b id='sumDesc'>네이버 스마트스토어 키워드 광고비</b></div>
+          <div><span>결제수단</span><b id='sumPayment'>사업용 신용카드</b></div>
         </div>
-        <div id="results"></div>
-        <div class="disclaimer">
-          추천 계정과목은 업종 정보와 거래내용을 기반으로 한 참고 후보입니다.
-          실제 장부 작성과 신고 시 거래 실질에 따라 달라질 수 있습니다.
-        </div>
+        <div id='results'></div>
       </section>
     </section>
 
-    <section class="panel" style="margin-top: 24px;">
-      <h2>매핑 데이터 미리보기</h2>
-      <div class="data-preview">
+    <section class='card table-card'>
+      <div class='toolbar'>
+        <h2 style='margin:0;'>매핑 데이터 샘플</h2>
+        <small id='tableCount'>총 100건</small>
+      </div>
+      <div class='table-wrap'>
         <table>
           <thead>
             <tr>
               <th>업종</th>
-              <th>거래 키워드</th>
               <th>거래유형</th>
+              <th>거래 키워드</th>
               <th>추천 계정과목</th>
-              <th>기본점수</th>
+              <th>점수</th>
               <th>추천 사유</th>
+              <th>주의</th>
             </tr>
           </thead>
-          <tbody id="mappingTable"></tbody>
+          <tbody id='tableBody'></tbody>
         </table>
       </div>
     </section>
+
+    <footer>
+      <a href='https://github.com/code88morning-cmd' target='_blank' rel='noopener'>
+        <svg class='gh-icon' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'>
+          <path d='M8 0C3.58 0 0 3.58 0 8a8.01 8.01 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.67 7.67 0 0 1 8 3.8c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z'/>
+        </svg>
+        © 2026 code88morning-cmd. All rights reserved.
+      </a>
+    </footer>
   </main>
 
   <script>
-    const industries = {
-      "ECOM-001": { name: "전자상거래 소매업", businessType: "소매업", item: "전자상거래" },
-      "FOOD-001": { name: "한식 일반 음식점업", businessType: "음식점업", item: "일반음식" },
-      "EDU-001": { name: "기타 교육지원 서비스업", businessType: "교육서비스업", item: "온라인/오프라인 강의" },
-      "SW-001": { name: "응용 소프트웨어 개발 및 공급업", businessType: "정보통신업", item: "소프트웨어 개발" },
-      "DESIGN-001": { name: "시각 디자인업", businessType: "전문서비스업", item: "디자인/콘텐츠 제작" }
-    };
+    const industries = {"ECOM": "전자상거래 소매업", "FOOD": "한식 일반 음식점업", "SW": "소프트웨어 개발업", "EDU": "교육서비스업", "DESIGN": "디자인 서비스업", "BEAUTY": "미용 서비스업", "CAFE": "카페/음료점업", "FITNESS": "피트니스 서비스업", "CONTENT": "콘텐츠 제작업", "INTERIOR": "인테리어 시공업"};
+    const mappings = [{"mapping_id": "ECOM-001", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "광고|키워드 광고|SNS 광고", "transaction_type": "온라인 광고 집행", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.92, "reason": "온라인 판매 촉진 목적 광고 지출 가능성이 높음", "caution": "광고대행 수수료가 함께 청구되면 지급수수료와 분리 검토"}, {"mapping_id": "ECOM-002", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "택배|배송|운송장|CJ대한통운", "transaction_type": "상품 배송비", "recommended_account_code": "EXP_DELIVERY", "recommended_account_name": "운반비", "score": 0.9, "reason": "고객 배송과 직접 관련된 비용 가능성이 높음", "caution": "매입 운송비는 상품매입 부대비용 검토"}, {"mapping_id": "ECOM-003", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "사입|도매|상품 매입", "transaction_type": "판매용 상품 구입", "recommended_account_code": "COGS_GOODS", "recommended_account_name": "상품매입", "score": 0.91, "reason": "재판매 목적 상품 구입 가능성이 높음", "caution": "사무용 물품 구입과 구분 필요"}, {"mapping_id": "ECOM-004", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "스마트스토어 수수료|PG 수수료|결제대행", "transaction_type": "플랫폼/결제 수수료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.89, "reason": "플랫폼 이용료 또는 결제대행 수수료 성격", "caution": "광고비와 섞여 청구되면 구분 필요"}, {"mapping_id": "ECOM-005", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "박스|봉투|테이프|완충재", "transaction_type": "포장재 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.79, "reason": "포장에 반복 사용되는 소모성 물품 성격", "caution": "상품 구성품이면 상품매입 검토"}, {"mapping_id": "ECOM-006", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "촬영 소품|상품 촬영|상세페이지 외주", "transaction_type": "콘텐츠 제작 외주", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.77, "reason": "상품 홍보용 제작 용역비 가능성", "caution": "광고매체 집행비와 구분 필요"}, {"mapping_id": "ECOM-007", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "창고 임대료|보관료|풀필먼트 창고", "transaction_type": "창고 사용료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.82, "reason": "상품 보관 공간 사용료 성격", "caution": "보관·출고 수수료는 지급수수료 검토"}, {"mapping_id": "ECOM-008", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "인터넷|전화|회선", "transaction_type": "통신 서비스 사용료", "recommended_account_code": "EXP_COMM", "recommended_account_name": "통신비", "score": 0.73, "reason": "사무 운영용 통신 서비스 비용", "caution": "클라우드 사용료와 구분 필요"}, {"mapping_id": "ECOM-009", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "노트북|바코드 프린터|촬영 장비", "transaction_type": "운영 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.75, "reason": "사업용 장비 취득 가능성이 높음", "caution": "소액 비품은 소모품비 검토"}, {"mapping_id": "ECOM-010", "industry_key": "ECOM", "industry_code": "DEMO-ECOM-001", "industry_name": "전자상거래 소매업", "transaction_keywords": "쇼핑몰 가입비|유료 앱|앱 사용료", "transaction_type": "운영 도구 사용료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.78, "reason": "서비스 운영을 위한 도구 사용료 성격", "caution": "장기 라이선스는 자산 처리 가능성 검토"}, {"mapping_id": "FOOD-001", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "식재료|쌀|고기|채소|수산물", "transaction_type": "식재료 구매", "recommended_account_code": "COGS_MATERIAL", "recommended_account_name": "재료비매입", "score": 0.93, "reason": "음식 제조 원재료 구입 가능성이 높음", "caution": "직원 식대 또는 접대비와 구분 필요"}, {"mapping_id": "FOOD-002", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "배달의민족|요기요|쿠팡이츠", "transaction_type": "배달앱 수수료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.89, "reason": "배달 플랫폼 이용료 또는 중개 수수료 성격", "caution": "광고 상품 결제분은 광고선전비 가능"}, {"mapping_id": "FOOD-003", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "월세|상가 임대료|관리비", "transaction_type": "매장 임차료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.9, "reason": "영업장 공간 사용료 가능성이 높음", "caution": "보증금은 자산 성격일 수 있음"}, {"mapping_id": "FOOD-004", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "전기요금|가스요금|수도요금", "transaction_type": "공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.88, "reason": "매장 운영 관련 공공요금 성격", "caution": "가정용과 혼합된 경우 안분 검토"}, {"mapping_id": "FOOD-005", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "아르바이트|직원 급여|주방 보조", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.86, "reason": "종업원 인건비 가능성이 높음", "caution": "원천세·4대보험 별도 검토"}, {"mapping_id": "FOOD-006", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "냅킨|위생장갑|세제|용기", "transaction_type": "매장 소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.76, "reason": "영업에 반복 사용되는 소모품 성격", "caution": "포장용기 일부는 재료비 검토 가능"}, {"mapping_id": "FOOD-007", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "간판|오픈 행사|홍보물", "transaction_type": "매장 홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.81, "reason": "고객 유치를 위한 홍보 지출 가능성", "caution": "거래처 접대 목적이면 구분 필요"}, {"mapping_id": "FOOD-008", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "주류 면허|협회비|위생교육비", "transaction_type": "세금/공과금/교육", "recommended_account_code": "EXP_TAX", "recommended_account_name": "제세공과금", "score": 0.72, "reason": "공과금 또는 협회비 성격 가능성", "caution": "벌금성 지출은 별도 검토"}, {"mapping_id": "FOOD-009", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "화물차 주유|배달 오토바이 수리", "transaction_type": "차량 운영비", "recommended_account_code": "EXP_VEHICLE", "recommended_account_name": "차량유지비", "score": 0.74, "reason": "사업용 차량 운영 관련 비용", "caution": "사적 사용분 제외 필요"}, {"mapping_id": "FOOD-010", "industry_key": "FOOD", "industry_code": "DEMO-FOOD-001", "industry_name": "한식 일반 음식점업", "transaction_keywords": "화재보험|배상책임보험", "transaction_type": "사업장 보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.71, "reason": "사업장 관련 보험료 가능성이 높음", "caution": "개인보험과 구분 필요"}, {"mapping_id": "SW-001", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "AWS|Azure|GCP|클라우드", "transaction_type": "클라우드 사용료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.87, "reason": "외부 플랫폼 사용료 또는 클라우드 이용료 성격", "caution": "통신비 또는 무형자산 처리와 구분 필요"}, {"mapping_id": "SW-002", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "GitHub|Notion|Figma|SaaS|구독", "transaction_type": "SaaS 구독료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.86, "reason": "개발/협업 도구 사용료 가능성이 높음", "caution": "장기 라이선스는 자산 처리 가능성 검토"}, {"mapping_id": "SW-003", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "인터넷|회선|통신", "transaction_type": "통신 서비스 비용", "recommended_account_code": "EXP_COMM", "recommended_account_name": "통신비", "score": 0.83, "reason": "사무실 또는 서비스 운영용 통신 서비스 비용", "caution": "클라우드 비용과 구분 필요"}, {"mapping_id": "SW-004", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "노트북|모니터|맥북|서버 장비", "transaction_type": "개발 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.84, "reason": "사업용 장비 취득 가능성이 높음", "caution": "소액 비품은 소모품비 처리 가능"}, {"mapping_id": "SW-005", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "프리랜서 개발|외주 개발|QA 외주", "transaction_type": "개발 외주비", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.85, "reason": "외부 전문가 개발 용역 성격", "caution": "근로계약 형태와 구분 필요"}, {"mapping_id": "SW-006", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "검색광고|런칭 광고|앱 광고", "transaction_type": "서비스 홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.79, "reason": "서비스 사용자 확보 목적 광고 가능성", "caution": "대행 수수료 포함 여부 확인"}, {"mapping_id": "SW-007", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "사무실 월세|공유오피스|좌석 이용료", "transaction_type": "사무 공간 사용료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.8, "reason": "업무 공간 사용료 가능성이 높음", "caution": "보증금과 구분 필요"}, {"mapping_id": "SW-008", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "전기요금|관리비|냉난방비", "transaction_type": "사무실 공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.72, "reason": "사무실 운영 관련 공공요금 성격", "caution": "공용관리비 세부 항목 확인 필요"}, {"mapping_id": "SW-009", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "교통비|출장비|KTX|택시", "transaction_type": "출장/교통비", "recommended_account_code": "EXP_TRAVEL", "recommended_account_name": "여비교통비", "score": 0.74, "reason": "업무 이동 및 출장 관련 비용", "caution": "개인 이동분과 구분 필요"}, {"mapping_id": "SW-010", "industry_key": "SW", "industry_code": "DEMO-SW-001", "industry_name": "소프트웨어 개발업", "transaction_keywords": "보안 인증|도메인|SSL|서버 인증서", "transaction_type": "IT 운영 필수 서비스 비용", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.78, "reason": "서비스 운영에 필요한 외부 서비스 사용료 성격", "caution": "자산성 여부 별도 검토"}, {"mapping_id": "EDU-001", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "강의장|세미나실|대관", "transaction_type": "교육 공간 대여", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.87, "reason": "교육 제공 공간 사용료 가능성이 높음", "caution": "행사 대행료와 구분 필요"}, {"mapping_id": "EDU-002", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "교재|인쇄|제본|프린트", "transaction_type": "교재 제작비", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.75, "reason": "교육 운영 자료 제작 비용 가능성", "caution": "판매용 교재는 상품매입 또는 원가 검토"}, {"mapping_id": "EDU-003", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "줌|웨비나|LMS|강의 플랫폼", "transaction_type": "온라인 교육 플랫폼 사용료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.83, "reason": "온라인 교육 운영 도구 사용료 성격", "caution": "통신비와 구분 필요"}, {"mapping_id": "EDU-004", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "모집 광고|수강생 모집|검색 광고", "transaction_type": "교육 홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.84, "reason": "수강생 모집 목적 광고 가능성", "caution": "대행 수수료 포함 여부 확인"}, {"mapping_id": "EDU-005", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "강사료|외부 강사|특강비", "transaction_type": "외부 강사 지급액", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.82, "reason": "외부 강사/전문가 용역비 가능성", "caution": "원천징수 여부 확인 필요"}, {"mapping_id": "EDU-006", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "프로젝터|노트북|마이크|카메라", "transaction_type": "교육 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.78, "reason": "교육 운영 장비 취득 가능성", "caution": "소액 비품은 소모품비 검토"}, {"mapping_id": "EDU-007", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "지하철|버스|택시|출장", "transaction_type": "이동/출장비", "recommended_account_code": "EXP_TRAVEL", "recommended_account_name": "여비교통비", "score": 0.73, "reason": "업무 이동 또는 출장 관련 비용", "caution": "사적 이동분 제외 필요"}, {"mapping_id": "EDU-008", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "직원 급여|행정 직원|운영 인력", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.81, "reason": "교육 운영 직원 급여 가능성", "caution": "외부 강사료와 구분 필요"}, {"mapping_id": "EDU-009", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "인터넷|전화|통신", "transaction_type": "통신비", "recommended_account_code": "EXP_COMM", "recommended_account_name": "통신비", "score": 0.71, "reason": "교육 운영용 통신 서비스 비용", "caution": "플랫폼 사용료와 구분 필요"}, {"mapping_id": "EDU-010", "industry_key": "EDU", "industry_code": "DEMO-EDU-001", "industry_name": "교육서비스업", "transaction_keywords": "간식|다과|직원 식대", "transaction_type": "복리후생성 지출", "recommended_account_code": "EXP_WELFARE", "recommended_account_name": "복리후생비", "score": 0.69, "reason": "직원 복지성 지출 가능성", "caution": "수강생 제공 행사비와 구분 필요"}, {"mapping_id": "DESIGN-001", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "폰트|이미지|아이콘|템플릿", "transaction_type": "디자인 리소스 구매", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.82, "reason": "외부 디자인 리소스 사용료 가능성이 높음", "caution": "라이선스 범위 확인 필요"}, {"mapping_id": "DESIGN-002", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "프리랜서 디자이너|영상 외주|편집 외주", "transaction_type": "외부 제작 용역", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.88, "reason": "외부 전문가 제작 용역비 가능성이 높음", "caution": "원천징수 여부 확인 필요"}, {"mapping_id": "DESIGN-003", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "SNS 광고|포트폴리오 홍보|검색 광고", "transaction_type": "자사 홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.79, "reason": "고객 유치용 홍보 목적 지출 가능성", "caution": "대행 수수료 포함 여부 확인"}, {"mapping_id": "DESIGN-004", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "아이패드|펜 태블릿|고사양 PC", "transaction_type": "디자인 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.84, "reason": "업무용 장비 취득 가능성이 높음", "caution": "소액 주변기기는 소모품비 검토"}, {"mapping_id": "DESIGN-005", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "공유오피스|작업실 월세|스튜디오 월세", "transaction_type": "작업 공간 사용료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.8, "reason": "업무 공간 사용료 가능성이 높음", "caution": "보증금과 구분 필요"}, {"mapping_id": "DESIGN-006", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "인쇄 샘플|패키지 샘플|시안 출력", "transaction_type": "샘플 제작비", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.76, "reason": "시안 또는 샘플 제작 비용 가능성", "caution": "판매용 제작물과 구분 필요"}, {"mapping_id": "DESIGN-007", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "인터넷|전화|통신", "transaction_type": "통신비", "recommended_account_code": "EXP_COMM", "recommended_account_name": "통신비", "score": 0.7, "reason": "업무용 통신 서비스 비용", "caution": "SaaS 사용료와 구분 필요"}, {"mapping_id": "DESIGN-008", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "사진 촬영|렌탈 스튜디오|장소 대관", "transaction_type": "촬영/작업 공간 대여", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.77, "reason": "일시적 작업 공간 사용료 가능성", "caution": "장비 대여료와 구분 필요"}, {"mapping_id": "DESIGN-009", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "택배|시안 발송|샘플 배송", "transaction_type": "배송비", "recommended_account_code": "EXP_DELIVERY", "recommended_account_name": "운반비", "score": 0.68, "reason": "시안/샘플 전달을 위한 배송 비용", "caution": "고객 재청구 여부 확인 필요"}, {"mapping_id": "DESIGN-010", "industry_key": "DESIGN", "industry_code": "DEMO-DESIGN-001", "industry_name": "디자인 서비스업", "transaction_keywords": "직원 급여|어시스턴트 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.78, "reason": "운영 인력 급여 가능성이 높음", "caution": "외주 지급액과 구분 필요"}, {"mapping_id": "BEAUTY-001", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "염색약|샴푸|시술재료|네일재료", "transaction_type": "미용 재료 구매", "recommended_account_code": "COGS_MATERIAL", "recommended_account_name": "재료비매입", "score": 0.91, "reason": "서비스 제공에 직접 사용하는 재료 성격", "caution": "판매용 제품이면 상품매입 검토"}, {"mapping_id": "BEAUTY-002", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "월세|상가 임대료|관리비", "transaction_type": "매장 임차료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.89, "reason": "영업장 공간 사용료 가능성이 높음", "caution": "보증금과 구분 필요"}, {"mapping_id": "BEAUTY-003", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "예약앱|플랫폼 수수료|결제 수수료", "transaction_type": "예약/결제 플랫폼 비용", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.84, "reason": "예약 또는 결제 플랫폼 이용료 성격", "caution": "광고 상품과 구분 필요"}, {"mapping_id": "BEAUTY-004", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "간판|오픈 행사|지역 광고", "transaction_type": "홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.8, "reason": "고객 유치용 홍보 지출 가능성", "caution": "접대성 지출과 구분 필요"}, {"mapping_id": "BEAUTY-005", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "수건|장갑|소독제|일회용품", "transaction_type": "매장 소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.78, "reason": "영업용 소모품 지출 가능성이 높음", "caution": "재료비와 구분 필요"}, {"mapping_id": "BEAUTY-006", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "직원 급여|스태프 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.82, "reason": "직원 급여 가능성이 높음", "caution": "프리랜서 정산과 구분 필요"}, {"mapping_id": "BEAUTY-007", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "전기요금|수도요금|가스요금", "transaction_type": "공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.76, "reason": "매장 운영 관련 공공요금 성격", "caution": "주거 겸용인 경우 안분 필요"}, {"mapping_id": "BEAUTY-008", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "드라이기|레이저기기|미용 장비", "transaction_type": "미용 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.83, "reason": "사업용 장비 취득 가능성이 높음", "caution": "소액 비품은 소모품비 검토"}, {"mapping_id": "BEAUTY-009", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "고객 음료|직원 간식|복지비", "transaction_type": "복리후생성 지출", "recommended_account_code": "EXP_WELFARE", "recommended_account_name": "복리후생비", "score": 0.67, "reason": "직원 복지 또는 응대용 소액 지출 가능성", "caution": "접대성 지출과 구분 필요"}, {"mapping_id": "BEAUTY-010", "industry_key": "BEAUTY", "industry_code": "DEMO-BEAUTY-001", "industry_name": "미용 서비스업", "transaction_keywords": "배상책임보험|화재보험", "transaction_type": "보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.72, "reason": "사업장 보험료 가능성이 높음", "caution": "개인 보험과 구분 필요"}, {"mapping_id": "CAFE-001", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "원두|우유|시럽|컵|디저트 재료", "transaction_type": "음료/디저트 재료 구매", "recommended_account_code": "COGS_MATERIAL", "recommended_account_name": "재료비매입", "score": 0.92, "reason": "음료 제조 및 판매 관련 원재료 구입 가능성", "caution": "판매용 완제품은 상품매입 검토"}, {"mapping_id": "CAFE-002", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "배달앱|테이블오더 수수료|PG 수수료", "transaction_type": "플랫폼 수수료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.87, "reason": "플랫폼 이용 또는 중개 수수료 성격", "caution": "광고 상품과 구분 필요"}, {"mapping_id": "CAFE-003", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "월세|임대료|상가 관리비", "transaction_type": "매장 임차료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.9, "reason": "매장 공간 사용료 성격", "caution": "보증금과 구분 필요"}, {"mapping_id": "CAFE-004", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "전기요금|수도요금|가스요금", "transaction_type": "공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.89, "reason": "카페 운영 관련 공공요금 성격", "caution": "주거 겸용이면 안분 필요"}, {"mapping_id": "CAFE-005", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "알바 급여|바리스타 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.84, "reason": "직원 인건비 가능성이 높음", "caution": "원천세·4대보험 별도 검토"}, {"mapping_id": "CAFE-006", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "테이크아웃 컵|빨대|냅킨", "transaction_type": "소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.78, "reason": "영업용 소모품 지출 가능성", "caution": "재료비와 중복 구분 필요"}, {"mapping_id": "CAFE-007", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "인스타 광고|지역 광고|신규 오픈 광고", "transaction_type": "홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.79, "reason": "고객 유치 목적 광고 지출 가능성", "caution": "대행 수수료와 구분 필요"}, {"mapping_id": "CAFE-008", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "원두머신|제빙기|냉장고", "transaction_type": "카페 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.86, "reason": "매장 운영 장비 취득 가능성이 높음", "caution": "소액 비품은 소모품비 검토"}, {"mapping_id": "CAFE-009", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "주유|주차|납품 차량 수리", "transaction_type": "차량 운영비", "recommended_account_code": "EXP_VEHICLE", "recommended_account_name": "차량유지비", "score": 0.69, "reason": "납품 또는 운영 차량 비용 가능성", "caution": "사적 사용분 제외 필요"}, {"mapping_id": "CAFE-010", "industry_key": "CAFE", "industry_code": "DEMO-CAFE-001", "industry_name": "카페/음료점업", "transaction_keywords": "화재보험|시설보험", "transaction_type": "보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.71, "reason": "사업장 시설 보험료 가능성이 높음", "caution": "개인 보험과 구분 필요"}, {"mapping_id": "FITNESS-001", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "헬스기구|런닝머신|덤벨|운동 장비", "transaction_type": "운동 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.88, "reason": "센터 운영용 장비 취득 가능성이 높음", "caution": "소액 소도구는 소모품비 검토"}, {"mapping_id": "FITNESS-002", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "월세|시설 임대료|공간 사용료", "transaction_type": "센터 임차료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.9, "reason": "영업장 공간 사용료 성격", "caution": "보증금과 구분 필요"}, {"mapping_id": "FITNESS-003", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "PT 강사료|프리랜서 강사|외부 강사", "transaction_type": "외부 강사/용역비", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.83, "reason": "프리랜서 강사 등 외부 용역비 성격", "caution": "급료와 구분 필요"}, {"mapping_id": "FITNESS-004", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "회원 모집 광고|전단지|SNS 광고", "transaction_type": "홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.82, "reason": "회원 유치 목적 광고 가능성", "caution": "접대성 지출과 구분 필요"}, {"mapping_id": "FITNESS-005", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "전기요금|가스요금|수도요금", "transaction_type": "공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.87, "reason": "시설 운영 관련 공공요금 가능성", "caution": "주거 겸용이면 안분 필요"}, {"mapping_id": "FITNESS-006", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "정수기 렌탈|소프트웨어 이용료|앱 사용료", "transaction_type": "운영 서비스 비용", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.75, "reason": "외부 서비스 또는 렌탈 이용료 성격", "caution": "장기 자산 취득과 구분 필요"}, {"mapping_id": "FITNESS-007", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "수건|청소도구|소독제", "transaction_type": "센터 소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.77, "reason": "센터 운영용 소모품 지출 가능성", "caution": "회원용 판매 상품은 상품매입 검토"}, {"mapping_id": "FITNESS-008", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "직원 급여|상담 직원 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.8, "reason": "센터 운영 직원 급여 가능성이 높음", "caution": "프리랜서 PT 정산과 구분 필요"}, {"mapping_id": "FITNESS-009", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "단체 보험|시설 보험|배상책임보험", "transaction_type": "보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.73, "reason": "시설 또는 책임 보험료 가능성", "caution": "개인 보험과 구분 필요"}, {"mapping_id": "FITNESS-010", "industry_key": "FITNESS", "industry_code": "DEMO-FITNESS-001", "industry_name": "피트니스 서비스업", "transaction_keywords": "회원 음료|직원 간식|복지", "transaction_type": "복리후생성 지출", "recommended_account_code": "EXP_WELFARE", "recommended_account_name": "복리후생비", "score": 0.66, "reason": "직원 복지성 지출 가능성", "caution": "회원 이벤트 비용과 구분 필요"}, {"mapping_id": "CONTENT-001", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "카메라|렌즈|마이크|조명", "transaction_type": "촬영 장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.85, "reason": "콘텐츠 제작 장비 취득 가능성이 높음", "caution": "소액 액세서리는 소모품비 검토"}, {"mapping_id": "CONTENT-002", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "프리미어|포토샵|캔바|편집 툴", "transaction_type": "편집 소프트웨어 사용료", "recommended_account_code": "EXP_FEE", "recommended_account_name": "지급수수료", "score": 0.83, "reason": "콘텐츠 제작 도구 사용료 성격", "caution": "장기 라이선스는 자산 처리 가능성 검토"}, {"mapping_id": "CONTENT-003", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "촬영 스튜디오|대관|공간 사용료", "transaction_type": "촬영 공간 대여료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.84, "reason": "촬영용 공간 사용료 가능성이 높음", "caution": "장비 대여료와 구분 필요"}, {"mapping_id": "CONTENT-004", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "유튜브 광고|채널 홍보|SNS 광고", "transaction_type": "콘텐츠 홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.8, "reason": "채널 또는 콘텐츠 홍보 목적 지출 가능성", "caution": "대행 수수료 포함 여부 확인"}, {"mapping_id": "CONTENT-005", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "택배|소품 배송|샘플 발송", "transaction_type": "배송비", "recommended_account_code": "EXP_DELIVERY", "recommended_account_name": "운반비", "score": 0.67, "reason": "소품 또는 샘플 발송 비용 가능성", "caution": "고객 재청구 여부 확인 필요"}, {"mapping_id": "CONTENT-006", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "작가 외주|편집 외주|썸네일 외주", "transaction_type": "외부 제작 용역비", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.87, "reason": "외부 전문가 제작 용역비 가능성이 높음", "caution": "원천징수 여부 검토"}, {"mapping_id": "CONTENT-007", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "촬영 소품|배경지|메모리카드", "transaction_type": "촬영 소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.74, "reason": "콘텐츠 제작용 소모품 지출 가능성", "caution": "재사용 가능 고가 장비는 자산 검토"}, {"mapping_id": "CONTENT-008", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "인터넷|회선|통신", "transaction_type": "통신비", "recommended_account_code": "EXP_COMM", "recommended_account_name": "통신비", "score": 0.72, "reason": "업로드/업무용 통신 서비스 비용", "caution": "플랫폼 이용료와 구분 필요"}, {"mapping_id": "CONTENT-009", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "직원 급여|매니저 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.76, "reason": "운영 인력 급여 가능성", "caution": "프리랜서 정산과 구분 필요"}, {"mapping_id": "CONTENT-010", "industry_key": "CONTENT", "industry_code": "DEMO-CONTENT-001", "industry_name": "콘텐츠 제작업", "transaction_keywords": "배상책임보험|장비 보험", "transaction_type": "보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.69, "reason": "장비 또는 업무 관련 보험료 가능성", "caution": "개인 보험과 구분 필요"}, {"mapping_id": "INTERIOR-001", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "타일|목재|페인트|건축자재", "transaction_type": "자재 구매", "recommended_account_code": "COGS_MATERIAL", "recommended_account_name": "재료비매입", "score": 0.92, "reason": "시공에 직접 사용되는 자재 구입 가능성이 높음", "caution": "공구 구매와 구분 필요"}, {"mapping_id": "INTERIOR-002", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "하도급|외주 시공|시공 용역", "transaction_type": "외부 시공 용역비", "recommended_account_code": "EXP_OUTSOURCING", "recommended_account_name": "외주용역비", "score": 0.84, "reason": "외부 시공 인력 또는 용역비 가능성이 높음", "caution": "직접 고용 인건비와 구분 필요"}, {"mapping_id": "INTERIOR-003", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "화물차 주유|톨게이트|정비|주차", "transaction_type": "차량 운영비", "recommended_account_code": "EXP_VEHICLE", "recommended_account_name": "차량유지비", "score": 0.81, "reason": "현장 이동용 차량 관련 비용 가능성", "caution": "사적 사용분 제외 필요"}, {"mapping_id": "INTERIOR-004", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "전동드릴|레이저레벨기|공구|장비", "transaction_type": "공구/장비 구입", "recommended_account_code": "ASSET_BUY", "recommended_account_name": "사업용 자산 매입", "score": 0.83, "reason": "사업용 공구·장비 취득 가능성이 높음", "caution": "소액 공구는 소모품비 검토"}, {"mapping_id": "INTERIOR-005", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "사무실 월세|창고 임대료", "transaction_type": "사무/보관 공간 사용료", "recommended_account_code": "EXP_RENT", "recommended_account_name": "임차료", "score": 0.78, "reason": "사무실 또는 자재 보관 공간 사용료 가능성", "caution": "보증금과 구분 필요"}, {"mapping_id": "INTERIOR-006", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "홈페이지 광고|지역 광고|현수막", "transaction_type": "홍보비", "recommended_account_code": "EXP_AD", "recommended_account_name": "광고선전비", "score": 0.74, "reason": "고객 유치를 위한 홍보 지출 가능성", "caution": "입찰비용과 구분 필요"}, {"mapping_id": "INTERIOR-007", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "안전장갑|마스크|비닐|청소도구", "transaction_type": "현장 소모품 구매", "recommended_account_code": "EXP_SUPPLIES", "recommended_account_name": "소모품비", "score": 0.79, "reason": "현장 작업용 소모품 지출 가능성", "caution": "자재비와 구분 필요"}, {"mapping_id": "INTERIOR-008", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "전기요금|수도요금|관리비", "transaction_type": "사무실 공공요금", "recommended_account_code": "EXP_WATER_ELEC", "recommended_account_name": "수도광열비", "score": 0.7, "reason": "사무실 운영 관련 공공요금 성격", "caution": "현장 직접비와 구분 필요"}, {"mapping_id": "INTERIOR-009", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "직원 급여|현장 직원 급여", "transaction_type": "직원 인건비", "recommended_account_code": "EXP_SALARY", "recommended_account_name": "급료", "score": 0.8, "reason": "상시 직원 급여 가능성이 높음", "caution": "일용직/외주와 구분 필요"}, {"mapping_id": "INTERIOR-010", "industry_key": "INTERIOR", "industry_code": "DEMO-INTERIOR-001", "industry_name": "인테리어 시공업", "transaction_keywords": "산재보험|배상책임보험|화재보험", "transaction_type": "보험료", "recommended_account_code": "EXP_INSURANCE", "recommended_account_name": "보험료", "score": 0.73, "reason": "업무 관련 보험료 가능성이 높음", "caution": "개인 보험과 구분 필요"}];
 
-    const mappings = [
-      {
-        industryCode: "ECOM-001",
-        keywords: ["네이버 광고", "메타 광고", "키워드 광고", "광고"],
-        type: "온라인 광고비",
-        account: "광고선전비",
-        score: 0.92,
-        reason: "온라인 판매 촉진을 위한 광고 지출 가능성이 높습니다.",
-        caution: "광고 대행 수수료가 포함된 경우 지급수수료도 검토하세요."
-      },
-      {
-        industryCode: "ECOM-001",
-        keywords: ["택배", "배송", "CJ대한통운", "우체국"],
-        type: "상품 배송비",
-        account: "운반비",
-        score: 0.90,
-        reason: "판매 상품을 고객에게 배송하는 비용 가능성이 높습니다.",
-        caution: "매입 과정 운송비는 상품매입 부대비용일 수 있습니다."
-      },
-      {
-        industryCode: "ECOM-001",
-        keywords: ["도매", "사입", "상품 매입"],
-        type: "판매용 상품 구입",
-        account: "상품매입",
-        score: 0.88,
-        reason: "재판매 목적 상품 구입 가능성이 높습니다.",
-        caution: "사업용 소모품과 혼동하지 않도록 확인하세요."
-      },
-      {
-        industryCode: "FOOD-001",
-        keywords: ["식재료", "농산물", "축산물", "수산물"],
-        type: "식재료 구매",
-        account: "원재료비",
-        score: 0.93,
-        reason: "음식 제조를 위한 재료 구입 가능성이 높습니다.",
-        caution: "직원 식대 또는 접대비와 구분하세요."
-      },
-      {
-        industryCode: "FOOD-001",
-        keywords: ["배달의민족", "요기요", "쿠팡이츠", "배달앱"],
-        type: "배달앱 수수료",
-        account: "지급수수료",
-        score: 0.91,
-        reason: "배달 플랫폼 이용 수수료 가능성이 높습니다.",
-        caution: "광고 상품 결제분은 광고선전비와 구분하세요."
-      },
-      {
-        industryCode: "FOOD-001",
-        keywords: ["월세", "임대료", "상가"],
-        type: "매장 임차료",
-        account: "지급임차료",
-        score: 0.89,
-        reason: "매장 공간 사용 비용 가능성이 높습니다.",
-        caution: "보증금은 비용이 아닌 자산 성격일 수 있습니다."
-      },
-      {
-        industryCode: "EDU-001",
-        keywords: ["강의장", "스튜디오", "대관"],
-        type: "강의 공간 대여",
-        account: "지급임차료",
-        score: 0.87,
-        reason: "강의 제공을 위한 공간 사용료 가능성이 높습니다.",
-        caution: "일회성 행사비와 구분하세요."
-      },
-      {
-        industryCode: "EDU-001",
-        keywords: ["교재", "인쇄", "제본"],
-        type: "교재 제작",
-        account: "소모품비",
-        score: 0.74,
-        reason: "교육 운영에 필요한 교재 제작 비용 가능성이 있습니다.",
-        caution: "판매용 교재라면 상품매입 또는 원가 처리 검토가 필요합니다."
-      },
-      {
-        industryCode: "SW-001",
-        keywords: ["AWS", "클라우드", "서버", "GitHub", "SaaS"],
-        type: "서비스 운영 도구 비용",
-        account: "지급수수료",
-        score: 0.86,
-        reason: "외부 플랫폼 또는 클라우드 서비스 이용료 가능성이 높습니다.",
-        caution: "통신비 또는 소프트웨어 자산 처리 가능성도 검토하세요."
-      },
-      {
-        industryCode: "SW-001",
-        keywords: ["인터넷", "통신", "회선"],
-        type: "통신 서비스 비용",
-        account: "통신비",
-        score: 0.82,
-        reason: "서비스 운영 또는 사무용 통신비 가능성이 높습니다.",
-        caution: "클라우드 서비스는 지급수수료와 병행 검토하세요."
-      },
-      {
-        industryCode: "DESIGN-001",
-        keywords: ["폰트", "이미지", "아이콘", "템플릿"],
-        type: "디자인 리소스 구매",
-        account: "지급수수료",
-        score: 0.81,
-        reason: "디자인 산출물 제작을 위한 외부 리소스 이용료 가능성이 높습니다.",
-        caution: "라이선스 기간과 사용권 범위를 확인하세요."
-      },
-      {
-        industryCode: "DESIGN-001",
-        keywords: ["외주", "프리랜서", "영상", "디자인"],
-        type: "외부 제작 용역",
-        account: "외주용역비",
-        score: 0.88,
-        reason: "외부 전문가에게 지급한 제작 용역비 가능성이 높습니다.",
-        caution: "원천징수 대상 여부를 확인하세요."
-      }
-    ];
-
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, function (char) {
-        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" })[char];
-      });
-    }
-
-    function scoreColor(score) {
-      if (score >= 0.85) return "var(--green)";
-      if (score >= 0.70) return "var(--orange)";
-      return "var(--red)";
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[s]);
     }
 
     function recommend() {
-      const industryCode = document.getElementById("industry").value;
-      const desc = document.getElementById("description").value.trim();
-      const payment = document.getElementById("payment").value;
-      const industry = industries[industryCode];
+      const industry = document.getElementById('industry').value;
+      const desc = document.getElementById('description').value;
+      const payment = document.getElementById('payment').value;
+      document.getElementById('sumIndustry').textContent = industries[industry];
+      document.getElementById('sumDesc').textContent = desc || '-';
+      document.getElementById('sumPayment').textContent = payment;
 
-      document.getElementById("summaryIndustry").textContent = industry.name;
-      document.getElementById("summaryDesc").textContent = desc || "-";
-      document.getElementById("summaryPayment").textContent = payment;
-
-      const normalized = desc.toLowerCase();
-      let candidates = mappings
-        .filter(row => row.industryCode === industryCode)
-        .map(row => {
-          const hit = row.keywords.some(keyword => normalized.includes(keyword.toLowerCase()));
-          const adjustedScore = Math.max(0.55, Math.min(0.98, row.score + (hit ? 0.04 : -0.16)));
-          return { ...row, hit, adjustedScore };
+      const descLower = desc.toLowerCase();
+      const rows = mappings
+        .filter(m => m.industry_key === industry)
+        .map(m => {
+          const hit = m.transaction_keywords.split('|').some(k => descLower.includes(k.trim().toLowerCase()));
+          return { ...m, finalScore: Math.min(0.98, Math.max(0.55, m.score + (hit ? 0.04 : -0.12))) };
         })
-        .sort((a, b) => b.adjustedScore - a.adjustedScore)
+        .sort((a,b) => b.finalScore - a.finalScore)
         .slice(0, 3);
 
-      if (!desc) {
-        candidates = mappings
-          .filter(row => row.industryCode === industryCode)
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 3)
-          .map(row => ({ ...row, hit: false, adjustedScore: row.score - 0.18 }));
-      }
-
-      const results = document.getElementById("results");
-
-      if (!candidates.length) {
-        results.innerHTML = `<div class="empty">해당 업종에 등록된 추천 규칙이 없습니다.</div>`;
-        return;
-      }
-
-      results.innerHTML = candidates.map((item, index) => {
-        const percentage = Math.round(item.adjustedScore * 100);
-        return `
-          <article class="recommendation">
-            <div class="rec-head">
-              <div class="rec-title"><span class="rank">${index + 1}</span>${escapeHTML(item.account)}</div>
-              <div class="confidence" style="color:${scoreColor(item.adjustedScore)}">${percentage}%</div>
-            </div>
-            <div class="bar"><i style="width:${percentage}%; background:${scoreColor(item.adjustedScore)}"></i></div>
-            <p class="reason"><b>추천 사유:</b> ${escapeHTML(item.reason)} ${item.hit ? "거래 키워드가 매핑 규칙과 일치합니다." : "거래내용 키워드가 명확하지 않아 업종 기반 후보로 제시합니다."}</p>
-            <p class="caution"><b>주의:</b> ${escapeHTML(item.caution)}</p>
-          </article>
-        `;
-      }).join("");
-    }
-
-    function loadDemo() {
-      document.getElementById("industry").value = "ECOM-001";
-      document.getElementById("amount").value = "120000";
-      document.getElementById("description").value = "네이버 스마트스토어 키워드 광고비";
-      document.getElementById("payment").value = "사업용 신용카드";
-      recommend();
+      document.getElementById('results').innerHTML = rows.map((m, idx) => `
+        <article class='rec'>
+          <div class='rec-head'>
+            <div class='title'>${idx + 1}. ${escapeHtml(m.recommended_account_name)}</div>
+            <div class='score'>${Math.round(m.finalScore * 100)}%</div>
+          </div>
+          <div class='bar'><i style='width:${Math.round(m.finalScore * 100)}%'></i></div>
+          <p class='reason'><b>추천 사유:</b> ${escapeHtml(m.reason)}</p>
+          <p class='caution'><b>주의:</b> ${escapeHtml(m.caution)}</p>
+        </article>
+      `).join('');
     }
 
     function renderTable() {
-      const body = document.getElementById("mappingTable");
-      body.innerHTML = mappings.map(row => `
+      document.getElementById('tableCount').textContent = `총 ${mappings.length}건`;
+      document.getElementById('tableBody').innerHTML = mappings.map(m => `
         <tr>
-          <td>${escapeHTML(industries[row.industryCode].name)}</td>
-          <td>${escapeHTML(row.keywords.join(", "))}</td>
-          <td>${escapeHTML(row.type)}</td>
-          <td><b>${escapeHTML(row.account)}</b></td>
-          <td>${Math.round(row.score * 100)}%</td>
-          <td>${escapeHTML(row.reason)}</td>
+          <td>${escapeHtml(m.industry_name)}</td>
+          <td>${escapeHtml(m.transaction_type)}</td>
+          <td>${escapeHtml(m.transaction_keywords)}</td>
+          <td><b>${escapeHtml(m.recommended_account_name)}</b></td>
+          <td>${Math.round(m.score * 100)}%</td>
+          <td>${escapeHtml(m.reason)}</td>
+          <td>${escapeHtml(m.caution)}</td>
         </tr>
-      `).join("");
+      `).join('');
     }
 
     renderTable();

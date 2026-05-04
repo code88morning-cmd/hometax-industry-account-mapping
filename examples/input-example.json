@@ -1,14 +1,7 @@
 {
-  "businessRegistration": {
-    "industryCode": "ECOM-001",
-    "businessType": "소매업",
-    "businessItem": "전자상거래",
-    "industryName": "전자상거래 소매업"
-  },
-  "transaction": {
-    "date": "2026-05-04",
-    "amount": 120000,
-    "description": "네이버 스마트스토어 키워드 광고비",
-    "paymentMethod": "사업용 신용카드"
-  }
+  "industryKey": "ECOM",
+  "industryCode": "DEMO-ECOM-001",
+  "transactionText": "네이버 스마트스토어 키워드 광고비",
+  "amount": 120000,
+  "paymentMethod": "사업용 신용카드"
 }
