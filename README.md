@@ -112,8 +112,6 @@ A public service improvement proposal for industry-based account category recomm
 
 ## 5. 포함 자료
 
-## 5. 포함 자료
-
 ```text
 hometax-industry-account-mapping/
 ├─ README.md
