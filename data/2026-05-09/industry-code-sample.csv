@@ -1,0 +1,11 @@
+﻿industry_key,industry_code,business_type,business_item,industry_name,sample_only
+ECOM,DEMO-ECOM-001,소매업,전자상거래,전자상거래 소매업,Y
+FOOD,DEMO-FOOD-001,음식점업,일반음식,한식 일반 음식점업,Y
+SW,DEMO-SW-001,정보통신업,소프트웨어 개발,소프트웨어 개발업,Y
+EDU,DEMO-EDU-001,교육서비스업,강의/교육,교육서비스업,Y
+DESIGN,DEMO-DESIGN-001,전문서비스업,디자인/콘텐츠,디자인 서비스업,Y
+BEAUTY,DEMO-BEAUTY-001,개인서비스업,미용,미용 서비스업,Y
+CAFE,DEMO-CAFE-001,음식점업,카페,카페/음료점업,Y
+FITNESS,DEMO-FITNESS-001,서비스업,피트니스,피트니스 서비스업,Y
+CONTENT,DEMO-CONTENT-001,정보통신업,콘텐츠 제작,콘텐츠 제작업,Y
+INTERIOR,DEMO-INTERIOR-001,건설업,인테리어 시공,인테리어 시공업,Y

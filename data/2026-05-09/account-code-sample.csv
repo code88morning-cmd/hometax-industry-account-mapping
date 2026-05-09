@@ -1,0 +1,19 @@
+﻿account_code,account_name,account_group,description
+REV_SALES,매출액,수입금액,상품 또는 서비스 판매 수입
+EXP_AD,광고선전비,판매관리비,광고·홍보·마케팅 지출
+EXP_FEE,지급수수료,판매관리비,플랫폼·결제·중개·전문가 수수료
+EXP_DELIVERY,운반비,판매관리비,택배·배송·화물 운송 비용
+COGS_GOODS,상품매입,매출원가,판매 목적 상품 구입
+COGS_MATERIAL,재료비매입,매출원가,제조·조리용 원재료 구입
+EXP_RENT,임차료,판매관리비,매장·사무실·강의장 등 공간 사용료
+EXP_SALARY,급료,판매관리비,직원 급여·인건비
+EXP_SUPPLIES,소모품비,판매관리비,사무용품·포장재·소액 비품
+EXP_COMM,통신비,판매관리비,인터넷·전화·회선 사용료
+EXP_WATER_ELEC,수도광열비,판매관리비,전기·가스·수도 등 공공요금
+EXP_TRAVEL,여비교통비,판매관리비,출장·교통 관련 비용
+EXP_OUTSOURCING,외주용역비,판매관리비,외부 전문가·프리랜서 용역비
+ASSET_BUY,사업용 자산 매입,자산,사업용 장비·집기·소프트웨어 취득
+EXP_TAX,제세공과금,판매관리비,세금·공과금·협회비
+EXP_VEHICLE,차량유지비,판매관리비,주유·주차·정비 등 차량 관련 비용
+EXP_WELFARE,복리후생비,판매관리비,직원 복지·간식·식대
+EXP_INSURANCE,보험료,판매관리비,사업 관련 보험료

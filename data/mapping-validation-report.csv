@@ -1,0 +1,7 @@
+﻿check_item,result,status
+account-code-sample row count,58,OK
+industry-code-sample row count,10,OK
+industry-account-mapping-sample row count,100,OK
+missing account references,none,OK
+missing industry references,none,OK
+used account code count,17,OK
